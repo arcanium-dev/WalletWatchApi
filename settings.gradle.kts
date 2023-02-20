@@ -1,0 +1,1 @@
+rootProject.name = "com.arcanium.wallet-watch-backend"
