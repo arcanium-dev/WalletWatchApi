@@ -21,7 +21,7 @@ fun Application.module() {
     val mongoPassword = System.getenv("MONGO_PW")
     val dbName = "wallet-watch-01"
     val db = KMongo.createClient(
-        connectionString = "mongodb+srv://<username>:$mongoPassword@cluster0.pqknvkf.mongodb.net/$dbName?retryWrites=true&w=majority"
+        connectionString = "mongodb+srv://arcanium-wallet-watch:$mongoPassword@cluster0.dmgxxk9.mongodb.net/wallet-watch-01?retryWrites=true&w=majority"
     )
         .coroutine
         .getDatabase(dbName)
@@ -36,8 +36,14 @@ fun Application.module() {
     )
     val hashingService = SHA256HashingService()
 
-    configureRouting()
+    configureSecurity(tokenConfig)
+    configureRouting(
+        userDataSource = userDataSource,
+        hashingService = hashingService,
+        tokenService = tokenService,
+        tokenConfig = tokenConfig
+    )
     configureSerialization()
     configureMonitoring()
-    configureSecurity(tokenConfig)
+
 }

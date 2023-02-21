@@ -5,8 +5,10 @@ val kmongo_version: String by project
 val commons_codec_version: String by project
 
 plugins {
+    application
     kotlin("jvm") version "1.8.10"
     id("io.ktor.plugin") version "2.2.3"
+    kotlin("plugin.serialization") version "1.4.21"
 }
 
 group = "com.arcanium"
