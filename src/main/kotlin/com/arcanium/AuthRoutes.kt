@@ -16,6 +16,7 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.apache.commons.codec.digest.DigestUtils
 
 fun Route.testApi() {
     get("/") {
@@ -61,15 +62,15 @@ fun Route.signIn(
     tokenService: TokenService,
     tokenConfig: TokenConfig
 ) {
-    post(path = "signin") {
+    post("signin") {
         val request = call.receiveOrNull<AuthRequest>() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest)
             return@post
         }
 
-        val user = userDataSource.getUserByUsername(username = request.username)
+        val user = userDataSource.getUserByUsername(request.username)
         if (user == null) {
-            call.respond(HttpStatusCode.Conflict, "Username does not exist.")
+            call.respond(HttpStatusCode.Conflict, "Incorrect username or password")
             return@post
         }
 
@@ -80,9 +81,9 @@ fun Route.signIn(
                 salt = user.salt
             )
         )
-
         if (!isValidPassword) {
-            call.respond(HttpStatusCode.Conflict, "Password incorrect.")
+            println("Entered hash: ${DigestUtils.sha256Hex("${user.salt}${request.password}")}, Hashed PW: ${user.password}")
+            call.respond(HttpStatusCode.Conflict, "Incorrect password \n Entered hash: ${DigestUtils.sha256Hex("${user.salt}${request.password}")}, Hashed PW: ${user.password}")
             return@post
         }
 
@@ -96,10 +97,13 @@ fun Route.signIn(
 
         call.respond(
             status = HttpStatusCode.OK,
-            message = AuthResponse(token = token)
+            message = AuthResponse(
+                token = token
+            )
         )
     }
 }
+
 
 // Checks to see whether client side token is still legit
 fun Route.authenticate() {
