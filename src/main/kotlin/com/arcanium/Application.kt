@@ -21,7 +21,7 @@ fun Application.module() {
     val mongoPassword = System.getenv("MONGO_PW")
     val dbName = "wallet-watch-01"
     val db = KMongo.createClient(
-        connectionString = "mongodb+srv://arcanium-wallet-watch:$mongoPassword@cluster0.dmgxxk9.mongodb.net/wallet-watch-01?retryWrites=true&w=majority"
+        connectionString = "mongodb+srv://arcanium-dev:$mongoPassword@cluster0.yk7mtez.mongodb.net/$dbName?retryWrites=true&w=majority"
     )
         .coroutine
         .getDatabase(dbName)
