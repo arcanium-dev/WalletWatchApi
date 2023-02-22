@@ -124,3 +124,24 @@ fun Route.getSecretInfo() {
         }
     }
 }
+
+fun Route.getUsername(
+    userDataSource: UserDataSource
+) {
+    authenticate {
+        post(path = "user") {
+            val principle = call.principal<JWTPrincipal>()
+            val userId = principle?.getClaim("userId", String::class)
+            if (userId == null) {
+                call.respond(HttpStatusCode.Conflict, "No user id found")
+                return@post
+            }
+            val user = userDataSource.getUserByUserId(userId)
+            if (user == null) {
+                call.respond(HttpStatusCode.Conflict, "No user for user id $userId found")
+                return@post
+            }
+            call.respond(HttpStatusCode.OK, user.userName)
+        }
+    }
+}

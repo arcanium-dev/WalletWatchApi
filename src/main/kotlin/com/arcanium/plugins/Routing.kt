@@ -28,5 +28,6 @@ fun Application.configureRouting(
         )
         authenticate()
         getSecretInfo()
+        getUsername(userDataSource)
     }
 }
