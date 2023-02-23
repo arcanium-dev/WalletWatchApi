@@ -1,13 +1,15 @@
 package com.arcanium
 
-import com.arcanium.data.user.MongoDataSource
+import com.arcanium.auth.data.repository.MongoUserDataRepository
 import com.arcanium.plugins.configureMonitoring
-import com.arcanium.plugins.configureRouting
-import com.arcanium.plugins.configureSecurity
+import com.arcanium.auth.router.configureRouting
 import com.arcanium.plugins.configureSerialization
-import com.arcanium.security.hashing.SHA256HashingService
-import com.arcanium.security.token.JwtTokenService
-import com.arcanium.security.token.TokenConfig
+import com.arcanium.auth.data.service.SHA256HashingService
+import com.arcanium.auth.data.service.JwtTokenService
+import com.arcanium.auth.domain.model.TokenConfig
+import com.arcanium.auth.domain.usecase.AuthUseCases
+import com.arcanium.auth.domain.usecase.TestApi
+import com.arcanium.plugins.configureSecurity
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
 import org.litote.kmongo.coroutine.coroutine
@@ -26,7 +28,7 @@ fun Application.module() {
         .coroutine
         .getDatabase(dbName)
 
-    val userDataSource = MongoDataSource(db)
+    val userDataSource = MongoUserDataRepository(db)
     val tokenService = JwtTokenService()
     val tokenConfig = TokenConfig(
         issuer = environment.config.property("jwt.issuer").getString(),
@@ -38,10 +40,11 @@ fun Application.module() {
 
     configureSecurity(tokenConfig)
     configureRouting(
-        userDataSource = userDataSource,
+        userDataRepository = userDataSource,
         hashingService = hashingService,
         tokenService = tokenService,
-        tokenConfig = tokenConfig
+        tokenConfig = tokenConfig,
+        authUseCases = AuthUseCases(testApi = TestApi())
     )
     configureSerialization()
     configureMonitoring()

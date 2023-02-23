@@ -1,4 +1,4 @@
-package com.arcanium.security.token
+package com.arcanium.auth.domain.model
 
 data class TokenConfig(
     val issuer: String,

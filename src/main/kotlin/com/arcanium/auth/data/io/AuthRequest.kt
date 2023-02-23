@@ -1,4 +1,4 @@
-package com.arcanium.data.request
+package com.arcanium.auth.data.io
 
 import kotlinx.serialization.Serializable
 

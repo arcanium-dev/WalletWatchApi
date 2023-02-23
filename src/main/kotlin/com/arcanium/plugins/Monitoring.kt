@@ -10,5 +10,4 @@ fun Application.configureMonitoring() {
         level = Level.DEBUG
         filter { call -> call.request.path().startsWith("/") }
     }
-
 }

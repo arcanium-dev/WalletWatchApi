@@ -1,14 +1,15 @@
-package com.arcanium
+package com.arcanium.auth.controller
 
-import com.arcanium.data.request.AuthRequest
-import com.arcanium.data.responses.AuthResponse
-import com.arcanium.data.user.User
-import com.arcanium.data.user.UserDataSource
-import com.arcanium.security.hashing.HashingService
-import com.arcanium.security.hashing.SaltedHash
-import com.arcanium.security.token.TokenClaim
-import com.arcanium.security.token.TokenConfig
-import com.arcanium.security.token.TokenService
+import com.arcanium.auth.data.io.AuthRequest
+import com.arcanium.auth.data.io.AuthResponse
+import com.arcanium.auth.data.entity.UserEntity
+import com.arcanium.auth.domain.repository.UserDataRepository
+import com.arcanium.auth.domain.service.HashingService
+import com.arcanium.auth.data.entity.SaltedHash
+import com.arcanium.auth.data.entity.TokenClaim
+import com.arcanium.auth.domain.model.TokenConfig
+import com.arcanium.auth.domain.service.TokenService
+import com.arcanium.auth.domain.usecase.TestApi
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -18,15 +19,15 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.apache.commons.codec.digest.DigestUtils
 
-fun Route.testApi() {
+fun Route.testApi(testApi: TestApi) {
     get("/") {
-        call.respond("Api is up and running!")
+        testApi.invoke(call)
     }
 }
 
 fun Route.signUp(
     hashingService: HashingService,
-    userDataSource: UserDataSource
+    userDataRepository: UserDataRepository
 ) {
     post(path = "signup") {
         val request = kotlin.runCatching { call.receiveNullable<AuthRequest>() }.getOrNull() ?: kotlin.run {
@@ -42,12 +43,12 @@ fun Route.signUp(
         }
 
         val saltedHash = hashingService.generateSaltedHash(request.password)
-        val user = User(
+        val userEntity = UserEntity(
             userName = request.username,
             password = saltedHash.hash,
             salt = saltedHash.salt
         )
-        val wasAcknowledged = userDataSource.insertNewUser(user)
+        val wasAcknowledged = userDataRepository.insertNewUser(userEntity)
         if (!wasAcknowledged) {
             call.respond(HttpStatusCode.Conflict)
             return@post
@@ -57,18 +58,18 @@ fun Route.signUp(
 }
 
 fun Route.signIn(
-    userDataSource: UserDataSource,
+    userDataRepository: UserDataRepository,
     hashingService: HashingService,
     tokenService: TokenService,
     tokenConfig: TokenConfig
 ) {
     post("signin") {
-        val request = call.receiveOrNull<AuthRequest>() ?: kotlin.run {
+        val request = kotlin.runCatching { call.receiveNullable<AuthRequest>() }.getOrNull() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest)
             return@post
         }
 
-        val user = userDataSource.getUserByUsername(request.username)
+        val user = userDataRepository.getUserByUsername(request.username)
         if (user == null) {
             call.respond(HttpStatusCode.Conflict, "Incorrect username or password")
             return@post
@@ -114,19 +115,8 @@ fun Route.authenticate() {
     }
 }
 
-// gets the userId from a valid token
-fun Route.getSecretInfo() {
-    authenticate {
-        get(path = "secret") {
-            val principle = call.principal<JWTPrincipal>()
-            val userId = principle?.getClaim("userId", String::class)
-            call.respond(HttpStatusCode.OK, "$userId")
-        }
-    }
-}
-
 fun Route.getUsername(
-    userDataSource: UserDataSource
+    userDataRepository: UserDataRepository
 ) {
     authenticate {
         post(path = "user") {
@@ -136,7 +126,7 @@ fun Route.getUsername(
                 call.respond(HttpStatusCode.Conflict, "No user id found")
                 return@post
             }
-            val user = userDataSource.getUserByUserId(userId)
+            val user = userDataRepository.getUserByUserId(userId)
             if (user == null) {
                 call.respond(HttpStatusCode.Conflict, "No user for user id $userId found")
                 return@post

@@ -1,6 +1,6 @@
 package com.arcanium.plugins
 
-import com.arcanium.security.token.TokenConfig
+import com.arcanium.auth.domain.model.TokenConfig
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.application.*
@@ -25,5 +25,4 @@ fun Application.configureSecurity(config: TokenConfig) {
             }
         }
     }
-
 }

@@ -1,5 +1,7 @@
-package com.arcanium.security.hashing
+package com.arcanium.auth.data.service
 
+import com.arcanium.auth.data.entity.SaltedHash
+import com.arcanium.auth.domain.service.HashingService
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
 import java.security.SecureRandom
