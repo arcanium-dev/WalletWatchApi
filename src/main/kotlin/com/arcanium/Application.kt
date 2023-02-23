@@ -17,13 +17,13 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
-
     configureKoin()
-    val authUseCases by inject<AuthUseCases>()
+
+    val authController by inject<AuthController>()
     val tokenConfig by inject<TokenConfig>()
 
     configureSecurity(tokenConfig)
-    configureAuthRouting(authController = AuthController(authUseCases = authUseCases))
+    configureAuthRouting(authController = authController)
     configureSerialization()
     configureMonitoring()
 }
