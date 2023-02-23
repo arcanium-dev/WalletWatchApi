@@ -1,6 +1,6 @@
 package com.arcanium.auth.domain.usecase
 
-import com.arcanium.auth.data.entity.UserEntity
+import com.arcanium.auth.data.entity.MongoUserEntity
 import com.arcanium.auth.domain.io.AuthRequest
 import com.arcanium.auth.domain.io.ResponseModel
 import com.arcanium.auth.domain.repository.UserDataRepository
@@ -24,12 +24,12 @@ class SignUpUseCase(
             )
         }
         val saltedHash = hashingService.generateSaltedHash(authRequest.password)
-        val userEntity = UserEntity(
+        val mongoUserEntity = MongoUserEntity(
             userName = authRequest.username,
             password = saltedHash.hash,
             salt = saltedHash.salt
         )
-        val wasAcknowledged = userDataRepository.insertNewUser(userEntity)
+        val wasAcknowledged = userDataRepository.insertNewUser(mongoUserEntity)
         if (!wasAcknowledged) {
             return ResponseModel(
                 httpStatusCode = HttpStatusCode.Conflict,

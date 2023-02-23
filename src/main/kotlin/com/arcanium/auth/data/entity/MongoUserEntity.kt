@@ -4,7 +4,7 @@ import com.arcanium.auth.domain.model.User
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 
-data class UserEntity(
+data class MongoUserEntity(
     val userName: String,
     val password: String,
     val salt: String,
