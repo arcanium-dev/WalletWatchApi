@@ -1,7 +1,7 @@
 package com.arcanium.auth.data.repository
 
-import com.arcanium.auth.domain.repository.UserDataRepository
 import com.arcanium.auth.data.entity.UserEntity
+import com.arcanium.auth.domain.repository.UserDataRepository
 import org.bson.types.ObjectId
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq

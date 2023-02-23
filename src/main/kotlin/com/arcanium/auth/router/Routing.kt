@@ -1,7 +1,6 @@
 package com.arcanium.auth.router
 
-import com.arcanium.auth.controller.*
-import com.arcanium.auth.controller.authenticate
+import com.arcanium.auth.controller.AuthController
 import com.arcanium.auth.domain.io.AuthRequest
 import io.ktor.http.*
 import io.ktor.server.application.*

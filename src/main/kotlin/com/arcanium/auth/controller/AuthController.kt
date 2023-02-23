@@ -5,7 +5,6 @@ import com.arcanium.auth.domain.usecase.AuthUseCases
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
-import javax.xml.transform.OutputKeys
 
 class AuthController(
     private val authUseCases: AuthUseCases
