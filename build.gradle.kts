@@ -4,6 +4,8 @@ val logbackVersion: String by project
 val kmongoVersion: String by project
 val commonsCodecVersion: String by project
 val koinKtor: String by project
+val mockkVersion: String by project
+val truthVersion: String by project
 
 plugins {
     application
@@ -38,6 +40,8 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("com.google.truth:truth:$truthVersion")
 
     // KMongo
     implementation("org.litote.kmongo:kmongo:$kmongoVersion")
