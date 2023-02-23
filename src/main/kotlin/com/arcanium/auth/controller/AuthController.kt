@@ -77,6 +77,5 @@ class AuthController(
                 message = UsernameResponse(username = response.data)
             )
         }
-
     }
 }
