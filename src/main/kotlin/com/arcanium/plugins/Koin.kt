@@ -9,9 +9,9 @@ import com.arcanium.auth.domain.repository.UserDataRepository
 import com.arcanium.auth.domain.service.HashingService
 import com.arcanium.auth.domain.service.TokenService
 import com.arcanium.auth.domain.usecase.AuthUseCases
+import com.arcanium.auth.domain.usecase.GetUserUseCase
 import com.arcanium.auth.domain.usecase.SignInUseCase
 import com.arcanium.auth.domain.usecase.SignUpUseCase
-import com.arcanium.auth.domain.usecase.TestApi
 import io.ktor.server.application.*
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
@@ -31,15 +31,16 @@ fun Application.configureKoin() {
 }
 
 val authModule = module {
-    single { TestApi() }
     single { SignUpUseCase(get(), get()) }
     single { SignInUseCase(get(), get(), get(), get()) }
     single { AuthController(get()) }
+    single { GetUserUseCase(get()) }
+
     single {
         AuthUseCases(
-            testApi = get(),
             signUp = get(),
-            signIn = get()
+            signIn = get(),
+            getUser = get(),
         )
     }
     single {

@@ -41,8 +41,8 @@ fun Application.configureAuthRouting(
         }
 
         authenticate {
-            get(path = "get-user") {
-                authController.testApi(call)
+            post(path = "get-user") {
+                authController.getUser(call)
             }
         }
     }

@@ -2,9 +2,6 @@ package com.arcanium
 
 import com.arcanium.auth.controller.AuthController
 import com.arcanium.auth.domain.model.TokenConfig
-import com.arcanium.auth.domain.repository.UserDataRepository
-import com.arcanium.auth.domain.service.HashingService
-import com.arcanium.auth.domain.service.TokenService
 import com.arcanium.auth.domain.usecase.AuthUseCases
 import com.arcanium.auth.router.configureAuthRouting
 import com.arcanium.plugins.configureKoin
@@ -23,9 +20,6 @@ fun Application.module() {
 
     configureKoin()
     val authUseCases by inject<AuthUseCases>()
-    val tokenService by inject<TokenService>()
-    val userDataRepository by inject<UserDataRepository>()
-    val hashingService by inject<HashingService>()
     val tokenConfig by inject<TokenConfig>()
 
     configureSecurity(tokenConfig)
