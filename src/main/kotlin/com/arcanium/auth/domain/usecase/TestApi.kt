@@ -8,7 +8,7 @@ class TestApi {
     suspend operator fun invoke(call: ApplicationCall) {
         call.respond(
             status = HttpStatusCode.OK,
-            message = "Api is up and running!"
+            message = "Api is up and running 111!"
         )
     }
 }
