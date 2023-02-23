@@ -11,6 +11,11 @@ data class UserEntity(
     @BsonId val id: ObjectId = ObjectId()
 ) {
     fun toUser(): User {
-        return User(username = this.userName)
+        return User(
+            username = this.userName,
+            password = this.password,
+            salt = this.salt,
+            id = this.id.toHexString()
+        )
     }
 }

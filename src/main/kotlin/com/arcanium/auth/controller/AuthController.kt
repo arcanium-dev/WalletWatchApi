@@ -7,6 +7,8 @@ import com.arcanium.auth.domain.io.UsernameResponse
 import com.arcanium.auth.domain.usecase.AuthUseCases
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 
 class AuthController(
@@ -24,7 +26,7 @@ class AuthController(
         call: ApplicationCall,
         request: AuthRequest
     ) {
-        val response = authUseCases.signUp(request = request)
+        val response = authUseCases.signUp(authRequest = request)
         call.respond(
             status = response.httpStatusCode,
             message = response.message ?: ResponseModel.nullMessage
@@ -35,7 +37,7 @@ class AuthController(
         call: ApplicationCall,
         request: AuthRequest
     ) {
-        val response = authUseCases.signIn(request = request)
+        val response = authUseCases.signIn(authRequest = request)
         if (response.data == null) {
             call.respond(
                 status = response.httpStatusCode,
@@ -54,14 +56,16 @@ class AuthController(
     ) {
         call.respond(
             status = HttpStatusCode.OK,
-            message = "auth is good"
+            message = "Auth is good."
         )
     }
 
     suspend fun getUser(
         call: ApplicationCall
     ) {
-        val response = authUseCases.getUser(call)
+        val principle = call.principal<JWTPrincipal>()
+        val userId = principle?.getClaim("userId", String::class)
+        val response = authUseCases.getUser(userId)
         if (response.data == null) {
             call.respond(
                 status = response.httpStatusCode,

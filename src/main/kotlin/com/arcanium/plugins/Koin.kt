@@ -47,7 +47,7 @@ val authModule = module {
         TokenConfig(
             issuer = System.getenv("ISSUER"),
             audience = System.getenv("AUDIENCE"),
-            expiresIn = 365L * 1000L * 60L * 60L * 24L,
+            expiresIn = 60000L,
             secret = System.getenv("JWT_SECRET")
         )
     }

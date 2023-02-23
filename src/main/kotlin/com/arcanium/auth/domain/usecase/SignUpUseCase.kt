@@ -12,10 +12,10 @@ class SignUpUseCase(
     private val hashingService: HashingService
 ) {
     suspend operator fun invoke(
-        request: AuthRequest
+        authRequest: AuthRequest
     ): ResponseModel<Unit> {
-        val areFieldsBlank = request.username.isBlank() || request.password.isBlank()
-        val passwordTooShort = request.password.length < 5
+        val areFieldsBlank = authRequest.username.isBlank() || authRequest.password.isBlank()
+        val passwordTooShort = authRequest.password.length < 5
         if (areFieldsBlank || passwordTooShort) {
             return ResponseModel(
                 httpStatusCode = HttpStatusCode.Conflict,
@@ -23,10 +23,9 @@ class SignUpUseCase(
                 message = "Invalid sign up details."
             )
         }
-
-        val saltedHash = hashingService.generateSaltedHash(request.password)
+        val saltedHash = hashingService.generateSaltedHash(authRequest.password)
         val userEntity = UserEntity(
-            userName = request.username,
+            userName = authRequest.username,
             password = saltedHash.hash,
             salt = saltedHash.salt
         )

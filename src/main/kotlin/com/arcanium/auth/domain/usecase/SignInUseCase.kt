@@ -17,23 +17,23 @@ class SignInUseCase(
     private val tokenConfig: TokenConfig
 ) {
     suspend operator fun invoke(
-        request: AuthRequest
+        authRequest: AuthRequest
     ): ResponseModel<String> {
-        val userEntity = userDataRepository.getUserByUsername(request.username)
+        val user = userDataRepository.getUserByUsername(authRequest.username)
 
-        if (userEntity == null) {
+        if (user == null) {
             return ResponseModel(
                 httpStatusCode = HttpStatusCode.Conflict,
                 data = null,
-                message = "Incorrect username or password."
+                message = "Incorrect username or password. 01"
             )
         }
 
         val isValidPassword = hashingService.verify(
-            value = request.password,
+            value = authRequest.password,
             saltedHash = SaltedHash(
-                hash = userEntity.password,
-                salt = userEntity.salt
+                hash = user.password,
+                salt = user.salt
             )
         )
         if (!isValidPassword) {
@@ -48,7 +48,7 @@ class SignInUseCase(
             config = tokenConfig,
             TokenClaim(
                 name = "userId",
-                value = userEntity.id.toString()
+                value = user.id
             )
         )
 

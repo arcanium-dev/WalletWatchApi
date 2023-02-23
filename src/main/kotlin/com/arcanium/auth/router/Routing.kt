@@ -9,6 +9,11 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
+/**
+ * Router of the Auth layer.
+ * Includes public as well as private endpoints.
+ * Performs authentication for private endpoints.
+ */
 fun Application.configureAuthRouting(
     authController: AuthController
 ) {
@@ -50,6 +55,9 @@ fun Application.configureAuthRouting(
 
 /**
  * Gets the authentication request after verifying that the payload coming from client side is in correct format to be deserialized on server side.
+ * Should the request payload be invalid/null, this function returns an HTTP 400 error.
+ * @param call ApplicationCall made by client.
+ * @return T - The deserialized instance of the payload.
  */
 suspend inline fun <reified T : Any> getRequestIfNotNull(call: ApplicationCall): T? {
     return runCatching { call.receiveNullable<T>() }
