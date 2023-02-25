@@ -1,6 +1,6 @@
 package com.arcanium.auth.domain.service
 
-import com.arcanium.auth.data.entity.SaltedHash
+import com.arcanium.auth.domain.model.SaltedHash
 
 interface HashingService {
 

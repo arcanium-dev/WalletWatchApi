@@ -1,8 +1,8 @@
 package com.arcanium.auth.data.service
 
-import com.arcanium.auth.domain.service.TokenService
-import com.arcanium.auth.data.entity.TokenClaim
+import com.arcanium.auth.domain.model.TokenClaim
 import com.arcanium.auth.domain.model.TokenConfig
+import com.arcanium.auth.domain.service.TokenService
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import java.util.*

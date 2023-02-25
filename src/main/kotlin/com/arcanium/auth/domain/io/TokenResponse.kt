@@ -1,8 +1,8 @@
-package com.arcanium.auth.data.io
+package com.arcanium.auth.domain.io
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AuthResponse(
+data class TokenResponse(
     val token: String
 )

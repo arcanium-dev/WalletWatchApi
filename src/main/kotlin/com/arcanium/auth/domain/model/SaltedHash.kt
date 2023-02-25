@@ -1,4 +1,4 @@
-package com.arcanium.auth.data.entity
+package com.arcanium.auth.domain.model
 
 data class SaltedHash(
     val hash: String,
