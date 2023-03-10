@@ -33,7 +33,6 @@ fun Application.configureKoin() {
 val authModule = module {
     single { SignUpUseCase(get(), get()) }
     single { SignInUseCase(get(), get(), get(), get()) }
-    single { AuthController(get()) }
     single { GetUserUseCase(get()) }
 
     single {
@@ -43,6 +42,7 @@ val authModule = module {
             getUser = get(),
         )
     }
+    single { AuthController(get()) }
     single {
         TokenConfig(
             issuer = System.getenv("ISSUER"),
@@ -60,7 +60,7 @@ val dbModule = module {
         val mongoPassword = System.getenv("MONGO_PW")
         val dbName = "wallet-watch-01"
         KMongo.createClient(
-            connectionString = "mongodb+srv://arcanium-dev:$mongoPassword@cluster0.yk7mtez.mongodb.net/$dbName?retryWrites=true&w=majority"
+            connectionString = "mongodb+srv://arcanium-dev:$mongoPassword@cluster0.lotmp9k.mongodb.net/$dbName?retryWrites=true&w=majority"
         )
             .coroutine
             .getDatabase(dbName)
